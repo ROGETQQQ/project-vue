@@ -3,7 +3,82 @@
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
+		<script src="../js/core/way.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
+		<div>
+		    <p>你好，<span id='nickName'></span></p>
+		    <div id="introduce"></div>
+		</div>　
+		<!--<div id="demo">
+			<p>{{ message }}</p>
+			<input v-model="message"/>
+		</div>-->
+		<!--<script src="../js/core/vue.js"></script>
+		<script>
+			var demo = new Vue({
+			  el: '#demo',
+			  data: {
+			    message: 'Hello Vue.js!'
+			  }
+			})
+		</script>-->
+		<script type="text/javascript">
+//			var userInfo = {};
+//			Object.defineProperty(userInfo, "nickName", {
+//			    get: function(){
+//			        return document.getElementById('nickName').innerHTML;
+//			    },
+//			    set: function(nick){
+//			        document.getElementById('nickName').innerHTML = nick;
+//			    }
+//			});
+//			Object.defineProperty(userInfo, "introduce", {
+//			    get: function(){
+//			        return document.getElementById('introduce').innerHTML;
+//			    },
+//			    set: function(introduce){
+//			        document.getElementById('introduce').innerHTML = introduce;
+//			    }
+//			});
+//			console.log(userInfo)
+
+//			var obj = {},
+//			oldValue = null;
+//			
+//			Object.defineProperty(obj, "roget", {
+//				enumerable: true,
+//    			configurable: true,
+//				get : function(){
+//					return obj;
+//				},
+//				set : function(newValue){
+//					oldValue = newValue;
+//				}
+//			});
+//			obj.roget = 1;
+//			console.log(obj.roget);
+			function twoWay(key){
+				var self  = this;
+				self._data = {};
+				Object.defineProperty(self, key, {
+					get : function(){ 
+						return self._data[key];
+					},
+	               set : function(newValue){
+	               		self._data[key] = val;
+	               		
+	               },
+	               enumerable : true,
+	               configurable : true
+				});
+			}
+			var o = new twoWay("b");
+			o._data.a = 1;
+			o._data.b = 2;
+			console.log(o._data);
+//			var way = new way();
+//			console.log(way)
+		</script>
 	</body>
 </html>

@@ -7,6 +7,7 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
   (global.Vue = factory());
+  console.log(factory())
 }(this, function () { 'use strict';
 
   function set(obj, key, val) {
