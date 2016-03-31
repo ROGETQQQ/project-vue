@@ -9177,6 +9177,7 @@ var template = Object.freeze({
   }
 
   // install internals
+  console.log(Vue)
   initMixin(Vue);
   stateMixin(Vue);
   eventsMixin(Vue);
@@ -9507,6 +9508,7 @@ var template = Object.freeze({
   };
 
   function installGlobalAPI (Vue) {
+  	
     /**
      * Vue and every constructor that extends Vue has an
      * associated options object, which can be accessed during
@@ -9525,7 +9527,7 @@ var template = Object.freeze({
       partials: {},
       replace: true
     };
-
+	
     /**
      * Expose useful internals
      */
@@ -9535,7 +9537,6 @@ var template = Object.freeze({
     Vue.set = set;
     Vue['delete'] = del;
     Vue.nextTick = nextTick;
-
     /**
      * The following are exposed for advanced usage / plugins
      */
@@ -9550,6 +9551,7 @@ var template = Object.freeze({
       directive: directive,
       expression: expression
     };
+    
 
     /**
      * Each instance constructor, including Vue, has a unique

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta name="" content="" charset="utf-8"/>	
+	 <script src="http://www.zhangxinxu.com/study/js/zxx.drag.1.0.js"></script>
+		<style>
+			canvas{
+				-moz-user-select: none;
+				-o-user-select:none;
+				-khtml-user-select:none;
+				-webkit-user-select:none;
+				-ms-user-select:none;
+			}
+			
+
+		</style>
+	</head>
+	<body>
+		<title>图片上传预览</title>
+		<div id="parent">
+		</div>	
+		<input type="file" id="fileElem" >
+		<div id="img" style="width:500px;height:300px;border:1px solid firebrick;position:relative">
+			
+		</div>
+		
+		<script>
+			
+			
+			function ScreenShot(arg){
+				//容器id
+				this.id = arg.id || "";
+				this.parent = arg.parent || "";
+				this.iptNode = document.getElementById(this.id);
+				//容器图像宽高
+				this.w = 500;
+				this.h = 300;
+				//矩形选取区域坐标
+				this.disX = 0;
+				this.disY = 0;
+				this.status = false;
+				//图像实例
+				this.bindEvent();
+			}
+			
+			
+			ScreenShot.prototype = {
+				/*
+				 * 获取尺寸
+				 * @param o IMG实例
+				 */
+				getSize : function(o){
+					var w,h,scale;
+					
+					if(o.width < o.height){
+						if(o.height > this.h){
+							scale = this.h / o.height;
+							w = o.width * scale;
+							h = this.h;
+						}
+					}else{
+						if(o.width >  this.w){
+							scale = this.w / o.width;
+							w = this.w;
+								//根据比例换算实际高度
+							h = o.height * scale;
+						}
+					}
+					
+					if(o.width <= this.w && o.height <= this.h){
+						w = o.width;
+						h = o.height;
+					}
+					return [w,h];
+				},
+				/*
+				 * 创建矩形选取可视区域内图像
+				 */
+				createRect : function(callback){
+						var _this = this;
+						var div = document.createElement("div");
+						div.id = "rect";
+						div.style.width = "50px";
+						div.style.height = "50px";
+						div.style.position = "absolute";
+						div.style.left = 0;
+						div.style.top = 0;
+						div.style.boxShadow = "0px 0px 8px #f00";
+						//div.style.opacity = "0.1";
+						div.style.cursor = "move";
+						if(!document.getElementById("rect")){
+							var dom = document.getElementById(this.parent);
+							dom.appendChild(div);
+						}
+						delete div;
+						var rect = document.getElementById("rect");
+						//startDrag(rect, rect);
+						//鼠标按下
+						rect.addEventListener("mousedown",function(e){
+							console.log(e)
+							_this.status = true;
+							
+							var evnt = e || event;                   // 得到鼠标事件
+					        disX = evnt.clientX - rect.offsetLeft;   // 鼠标横坐标 - rect的left
+					        disY = evnt.clientY - rect.offsetTop;    // 鼠标纵坐标 - rect的top
+					        console.log("down:" + disX,disY)
+					      
+					        
+					        document.addEventListener("mousemove",function(e){
+								if(!_this.status) return
+								var evnt = e || event;
+					            var x = evnt.clientX - disX;
+					            var y = evnt.clientY - disY;
+					            var window_width  = document.documentElement.clientWidth  - rect.offsetWidth;
+					            var window_height = document.documentElement.clientHeight - rect.offsetHeight;
+					             
+					            x = ( x < 0 ) ? 0 : x;                          // 当rect到窗口最左边时
+					            x = ( x > window_width ) ? window_width : x;    // 当rect到窗口最右边时
+					            y = ( y < 0 ) ? 0 : y;                          // 当rect到窗口最上边时
+					            y = ( y > window_height ) ? window_height : y;  // 当rect到窗口最下边时
+					             
+					            rect.style.left = x + "px";
+					            rect.style.top  = y + "px";
+					    
+					            callback(rect.offsetLeft,rect.offsetTop);
+							},false);
+					        
+					        
+						},false);
+						//鼠标移动时
+						
+						//鼠标松开时
+						rect.addEventListener("mouseup",function(e){
+							_this.status = false;
+							document.onmousemove =null;
+            				document.onmouup = null;
+						},false);
+						
+				},
+				/*
+				 * 创建canvas
+				 * @param o IMG实例
+				 */
+				createCas : function(o){
+					var self = this;
+					if(!document.getElementById("draw")){
+						var cas = document.createElement("canvas");
+						cas.id = "draw";
+						document.getElementById(this.parent).appendChild(cas);	
+					}
+					
+					var size = this.getSize(o);
+
+					//生成canvas图像
+					//获取canvas element
+					
+					var target = document.getElementById("draw");
+					target.width = size[0];
+					target.height = size[1];
+//					target.height = o.height;
+					var ctx = target.getContext("2d");
+					//设置透明度
+					ctx.beginPath()
+					ctx.drawImage(o,0,0,size[0],size[1]);
+					
+					ctx.beginPath();
+					ctx.globalAlpha=0.8;
+					ctx.fillStyle= "#fff";
+					ctx.fillRect(0,0,size[0],size[1]);
+					this.createRect(function(x,y){
+						console.log(x,y)
+						ctx.beginPath()
+						ctx.drawImage(o,x,y,50,50);
+						//ctx.beginPath();
+						//self.createCas(o);
+						//console.log(x,y)
+						//ctx.clearRect(x,y,50,50);
+					});
+				},
+				/*
+				 * 获取画面
+				 */
+				getDarw : function(o){
+					var _this = this;
+					window.URL = window.URL || window.webkitURL;
+					var img = new Image();
+					var files = this.iptNode.files;
+					if(window.URL){
+						//File API
+						img.src = window.URL.createObjectURL(files[0]);
+						img.onload = function(){
+							_this.createCas(this);
+						}
+					}
+				},
+				/*
+				 * 绑定事件
+				 */
+				bindEvent : function(){
+					var _this = this;
+					this.iptNode.addEventListener("change",function(){
+						_this.getDarw(_this);
+					},false);
+				}
+			}
+			
+			var model = new ScreenShot({
+				id : "fileElem",
+				parent : "img"
+			});
+		</script>
+	</body>
+
+</html>
+
+

@@ -4,122 +4,34 @@
 		<meta charset="UTF-8">
 		<title></title>
 		<script src="../js/core/way.js" type="text/javascript" charset="utf-8"></script>
+		<!--<script type="text/javascript" src="../js/core/vue.js" ></script>-->
 	</head>
 	<body>
-		<div>
-		    <p>你好，<span id='nickName'></span></p>
-		    <div id="introduce"></div>
-		</div>　
-		<!--<div id="demo">
-			<p>{{ message }}</p>
-			<input v-model="message"/>
-		</div>-->
-		<!--<script src="../js/core/vue.js"></script>
+		<div id="example">
+			<ul>
+				
+			</ul>
+		</div>
 		<script>
-			var demo = new Vue({
-			  el: '#demo',
-			  data: {
-			    message: 'Hello Vue.js!'
-			  }
-			})
-		</script>-->
-		<script type="text/javascript">
-		var o = {};
-			  function defineReactive(obj, key, val, doNotObserve) {
-			    //var dep = new Dep();
-			
-			    var property = Object.getOwnPropertyDescriptor(obj, key);
-			    if (property && property.configurable === false) {
-			      return;
-			    }
-			
-			    // cater for pre-defined getter/setters
-			    var getter = property && property.get;
-			    var setter = property && property.set;
-			
-			    // if doNotObserve is true, only use the child value observer
-			    // if it already exists, and do not attempt to create it.
-			    // this allows freezing a large object from the root and
-			    // avoid unnecessary observation inside v-for fragments.
-			    //var childOb = doNotObserve ? isObject(val) && val.__ob__ : observe(val);
-			    Object.defineProperty(obj, key, {
-			      enumerable: true,
-			      configurable: true,
-			      get: function reactiveGetter() {
-			        var value = getter ? getter.call(obj) : val;
-//			        if (Dep.target) {
-//			          dep.depend();
-//			          if (childOb) {
-//			            childOb.dep.depend();
-//			          }
-			          //if (isArray(value)) {
-			            for (var e, i = 0, l = value.length; i < l; i++) {
-			              e = value[i];
-			              e && e.__ob__ && e.__ob__.dep.depend();
-			            }
-			         // }
-//			        }
-			        return value;
-			      },
-			      set: function reactiveSetter(newVal) {
-			      	console.log("改变了")
-			        var value = getter ? getter.call(obj) : val;
-			        if (newVal === value) {
-			          return;
-			        }
-			        if (setter) {
-			          setter.call(obj, newVal);
-			        } else {
-			          val = newVal;
-			        }
-			       // childOb = doNotObserve ? isObject(newVal) && newVal.__ob__ : observe(newVal);
-			        //dep.notify();
-			      }
-			    });
-			  }
-			  	
-				defineReactive(o, "a", 1, true);
-				console.log(o.a)
-				o.a = 2;
-				console.log(o.a)
-				console.log(o)
-//			var userInfo = {};
-//			Object.defineProperty(userInfo, "nickName", {
-//			    get: function(){
-//			        return document.getElementById('nickName').innerHTML;
-//			    },
-//			    set: function(nick){
-//			        document.getElementById('nickName').innerHTML = nick;
-//			    }
-//			});
-//			Object.defineProperty(userInfo, "introduce", {
-//			    get: function(){
-//			        return document.getElementById('introduce').innerHTML;
-//			    },
-//			    set: function(introduce){
-//			        document.getElementById('introduce').innerHTML = introduce;
-//			    }
-//			});
-//			console.log(userInfo)
-
-//			var obj = {},
-//			oldValue = null;
-//			
-//			Object.defineProperty(obj, "roget", {
-//				enumerable: true,
-//    			configurable: true,
-//				get : function(){
-//					return obj;
-//				},
-//				set : function(newValue){
-//					oldValue = newValue;
-//				}
-//			});
-//			obj.roget = 1;
-//			console.log(obj.roget);
-			
-//			var way = new way();
-//			console.log(way)
+			var o  = new Way({
+				el : "#example ul",
+				data : [{
+					a : 1
+				},{
+					a: 2
+				}]
+				,template : function(){
+					var str = "",
+						self = this.data,
+						len = self.length;
+						
+					while(len){
+						len --;
+						str += "<div> "+ self[len].a +" </div>";
+					}
+					return str;
+				}
+			});
 		</script>
 	</body>
 </html>
